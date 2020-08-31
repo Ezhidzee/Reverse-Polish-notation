@@ -47,7 +47,7 @@ public class Main {
                         res = n1 / n2;
                         break;
                     default:
-                        System.out.println("EROR");
+                        System.out.println("ERROR");
                 }
                 stackNumbers.push(res);
             }
