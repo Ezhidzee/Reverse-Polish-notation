@@ -1,9 +1,9 @@
-package com.company;
+package com.example.unitonverter;
 
 import java.util.Stack;
 
-public class Main {
-    //Метод проверки приоритета символа
+public class Calc {
+
     private static int priority(char Simbol) {
         switch (Simbol) {
             case '+':
@@ -29,8 +29,7 @@ public class Main {
             } /*Если очередной символ - знак операции, то извлекаем из стека два верхних числа,
              используем их в качестве операндов для этой операции, затем кладем результат обратно в стек.
              Когда вся входная строка будет разобрана в стеке должно остаться одно число,
-             которое и будет результатом данного выражения.*/
-            else {
+             которое и будет результатом данного выражения.*/ else {
                 n2 = stackNumbers.pop();
                 n1 = stackNumbers.pop();
                 switch (opzArray[i]) {
@@ -47,7 +46,7 @@ public class Main {
                         res = n1 / n2;
                         break;
                     default:
-                        System.out.println("ERROR");
+                        return n1;
                 }
                 stackNumbers.push(res);
             }
@@ -55,17 +54,28 @@ public class Main {
         return res;
     }
 
-    public static void main(String[] args) {
-        String answ = "36852*5-3+111"; //переменная для ввода примера
+    public static double CalcIn(String answ){
+        //String answ = "78*96/87"; //переменная для ввода примера
         answ += " "; //костыль
+        boolean firstTry = false;
         char[] problem = answ.toCharArray();
         //создаём два стека(согласно алгоритму)
         Stack<Character> stackSIMB = new Stack<>();
         Stack<String> stackOPZ = new Stack<>(); //OPZ - обратная польская запись
         for (int i = 0; i < problem.length - 1; i++) {
+            if(problem[0] == '-' && !firstTry) {
+                i++;
+                firstTry = true;
+            }
             //если символ является числом
             if (problem[i] != '+' && problem[i] != '-' && problem[i] != '/' && problem[i] != '*') {
-                String str = String.valueOf(problem[i]);
+                String str = "";
+                if(i == 1 && firstTry){
+                    str = "-";
+                    str += String.valueOf(problem[i]);
+                }else{
+                    str = String.valueOf(problem[i]);
+                }
                 //если число одинарное то просто добваить его в стек
                 if (problem[i + 1] == '+' || problem[i + 1] == '-' || problem[i + 1] == '/' || problem[i + 1] == '*') {
                     stackOPZ.push(str);
@@ -86,8 +96,7 @@ public class Main {
                     stackSIMB.push(problem[i]);
                 }/*Если символ, находящийся на вершине стека имеет приоритет,
                  больший или равный приоритету текущего символа,
-                 то извлекаем символы из стека в выходную строку до тех пор, пока выполняется это условие.*/
-                else if (priority(stackSIMB.peek()) >= priority(problem[i])) {
+                 то извлекаем символы из стека в выходную строку до тех пор, пока выполняется это условие.*/ else if (priority(stackSIMB.peek()) >= priority(problem[i])) {
                     while (!stackSIMB.empty()) {
                         stackOPZ.push(String.valueOf(stackSIMB.pop()));
                     }
@@ -99,16 +108,7 @@ public class Main {
         while (!stackSIMB.empty()) {
             stackOPZ.push(String.valueOf(stackSIMB.pop()));
         }
-        System.out.println(Calc(stackOPZ));
+        //System.out.println(Calc(stackOPZ));
+        return Calc(stackOPZ);
     }
 }
-/*
-...........／＞　 フ.....................
-　　　　　| 　O　 O|
-　 　　　／`ミ _x 彡
-　　 　 /　　　 　 |
-　　　 /　 ヽ　　 ﾉ
-　／￣|　　 |　|　|
-　| (￣ヽ＿_ヽ_)_)
-　＼二つ
-*/
